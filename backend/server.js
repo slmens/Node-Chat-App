@@ -5,13 +5,13 @@ import messageRoutes from "./routes/message.routes.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { app, server } from "./socket/socket.js";
 
-const app = express();
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(5000, () => {
+server.listen(PORT, () => {
   connectToMongoDB();
   console.log(`Server running on port ${PORT}`);
 });
