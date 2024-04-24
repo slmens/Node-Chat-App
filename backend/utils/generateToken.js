@@ -13,8 +13,6 @@ const generateTokenAndSetCookie = (userId, res) => {
   };
 
   res.cookie("token", token, options);
-
-  return token;
 };
 
 export default generateTokenAndSetCookie;

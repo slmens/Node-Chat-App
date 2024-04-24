@@ -1,10 +1,27 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import LoginForm from "@/components/Auth/LoginForm";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+function Login() {
+  const router = useRouter();
+
+  const handleRedirectToRegister = () => {
+    router.push("/register");
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24"></main>
+    <div className="w-screen h-screen flex flex-col gap-10 justify-center items-center">
+      <LoginForm />
+      <button className="" onClick={handleRedirectToRegister}>
+        Doesn&apos;t have an account?
+      </button>
+    </div>
   );
 }
+
+export default Login;
 
 // middleware lazım
 // https://www.youtube.com/watch?v=y99YgaQjgx4
