@@ -1,6 +1,8 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
+import { Register } from "@/service/Auth";
 
 interface RegistrationFormValues {
   fullName: string;
@@ -26,9 +28,26 @@ const RegistrationSchema = Yup.object().shape({
 });
 
 const RegistrationForm: React.FC = () => {
-  const handleSubmit = (values: RegistrationFormValues) => {
+  const router = useRouter();
+
+  const handleSubmit = async (values: RegistrationFormValues) => {
     // Handle form submission here
     console.log("Form submitted with values:", values);
+
+    try {
+      const registerResult = await Register({
+        fullname: values.fullName,
+        username: values.username,
+        password: values.password,
+        passwordConfirm: values.passwordConfirm,
+      });
+
+      if (registerResult) {
+        router.push("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

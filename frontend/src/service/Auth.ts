@@ -1,15 +1,23 @@
 import axios from "axios";
 
-export const Login = () => {
+export const Login = ({
+  username,
+  password,
+}: {
+  username: string;
+  password: string;
+}) => {
   try {
     axios
       .post("http://localhost:5000/api/auth/login", {
-        username: "admin",
-        password: "admin",
+        username,
+        password,
       })
       .then(
         (response) => {
-          console.log(response);
+          if (response.status === 200) {
+            localStorage.setItem("token", "loggedIn");
+          }
         },
         (error) => {
           console.log(error);
@@ -20,37 +28,48 @@ export const Login = () => {
   }
 };
 
-export const Register = () => {
+export const Register = async ({
+  fullname,
+  username,
+  password,
+  passwordConfirm,
+}: {
+  fullname: string;
+  username: string;
+  password: string;
+  passwordConfirm: string;
+}): Promise<boolean> => {
   try {
-    axios
-      .post("http://localhost:5000/api/auth/register", {
-        username: "admin",
-        password: "admin",
-      })
-      .then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  } catch (e) {
-    console.log(e);
+    const response = await axios.post("http://localhost:5000/api/auth/signup", {
+      fullname,
+      username,
+      password,
+      passwordConfirm,
+    });
+
+    if (response.status === 201) {
+      localStorage.setItem("token", "loggedIn");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 };
 
-export const Logout = () => {
+export const Logout = async () => {
   try {
-    axios.post("http://localhost:5000/api/auth/logout").then(
-      (response) => {
-        console.log(response);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  } catch (e) {
-    console.log(e);
+    const response = await axios.post("http://localhost:5000/api/auth/logout");
+    if (response.status === 200) {
+      localStorage.removeItem("token");
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 };

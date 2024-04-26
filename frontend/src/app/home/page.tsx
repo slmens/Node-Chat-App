@@ -3,6 +3,8 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import ChatNavigation from "@/components/ChatLayout/ChatNavigation";
+import Chat from "@/components/ChatLayout/Chat";
 
 function Home() {
   const router = useRouter();
@@ -13,10 +15,22 @@ function Home() {
 
     if (!token || token === "" || token === undefined || token === null) {
       router.push("/");
+    } else {
+      setAuthorized(true);
     }
   }, []);
 
-  return authorized && <div>Home</div>;
+  return (
+    authorized && (
+      <div
+        id="homePageContainer"
+        className="w-screen h-screen flex justify-center items-center"
+      >
+        <ChatNavigation />
+        <Chat />
+      </div>
+    )
+  );
 }
 
 export default Home;

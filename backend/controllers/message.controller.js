@@ -1,5 +1,5 @@
-import Conversation from "../models/Conversation.js";
-import Message from "../models/message.model";
+import Conversation from "../models/conversation.model.js";
+import Message from "../models/message.model.js";
 
 export const createMessage = async (req, res) => {
   try {

@@ -3,6 +3,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { Login } from "@/service/Auth";
 
 interface LoginFormValues {
   username: string;
@@ -23,6 +24,15 @@ const LoginForm: React.FC = () => {
   const handleSubmit = (values: LoginFormValues) => {
     // Handle form submission here
     console.log("Form submitted with values:", values);
+
+    try {
+      Login({
+        username: values.username,
+        password: values.password,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
