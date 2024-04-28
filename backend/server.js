@@ -6,7 +6,7 @@ import userRoutes from "./routes/user.routes.js";
 import conversationRoutes from "./routes/conversation.routes.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import cors from "cors";
-import cookieParser from "cookie-parser";
+//import cookieParser from "cookie-parser";
 import { app, server } from "./socket/socket.js";
 
 dotenv.config();
@@ -19,8 +19,13 @@ server.listen(PORT, () => {
 });
 
 app.use(express.json()); // To parse JSON bodies
-app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+//app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with your client's origin
+    credentials: true, // This allows cookies to be sent with requests
+  })
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);

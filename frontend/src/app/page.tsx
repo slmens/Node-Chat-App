@@ -11,7 +11,7 @@ function Login() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (token === "loggedIn") {
+    if (token) {
       router.push("/home");
       setNotAuthorized(false);
     } else {

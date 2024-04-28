@@ -3,7 +3,8 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Login } from "@/service/Auth";
+import { Login } from "@/service/Auth.service";
+import { useRouter } from "next/navigation";
 
 interface LoginFormValues {
   username: string;
@@ -21,15 +22,20 @@ const LoginSchema = Yup.object().shape({
 });
 
 const LoginForm: React.FC = () => {
-  const handleSubmit = (values: LoginFormValues) => {
+  const router = useRouter();
+
+  const handleSubmit = async (values: LoginFormValues) => {
     // Handle form submission here
-    console.log("Form submitted with values:", values);
 
     try {
-      Login({
+      const loginResult = await Login({
         username: values.username,
         password: values.password,
       });
+      console.log(loginResult);
+      if (loginResult) {
+        router.push("/home");
+      }
     } catch (e) {
       console.log(e);
     }

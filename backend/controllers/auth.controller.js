@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {
@@ -22,9 +23,18 @@ export const signup = async (req, res) => {
     const newUser = new User({ fullname, username, password: hashedPassword });
 
     if (newUser) {
-      generateTokenAndSetCookie(newUser._id, res);
+      //generateTokenAndSetCookie(newUser._id, res);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "15d",
+      });
+
       await newUser.save();
-      res.status(201).json({ message: "User created successfully" });
+
+      res.status(201).json({
+        message: "User created successfully",
+        userId: newUser._id,
+        token: token,
+      });
     } else {
       res.status(400).json({ message: "User could not be created" });
     }
@@ -47,8 +57,16 @@ export const login = async (req, res) => {
     const isMatch = await bcryptjs.compare(password, user.password || "");
 
     if (isMatch) {
-      generateTokenAndSetCookie(user._id, res);
-      res.status(200).json({ message: "Logged in successfully" });
+      //generateTokenAndSetCookie(user._id, res);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "15d",
+      });
+
+      res.status(200).json({
+        message: "Logged in successfully",
+        userId: user._id,
+        token: token,
+      });
     } else {
       res.status(400).json({ message: "Invalid password or username" });
     }
@@ -60,7 +78,7 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    res.clearCookie("token");
+    //res.clearCookie("token");
     // res.cookie("token", "", { maxAge: 0});
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {

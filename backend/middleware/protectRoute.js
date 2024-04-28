@@ -2,8 +2,11 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
 const protectRoute = async (req, res, next) => {
+  console.log("Protecting route...");
   try {
-    const token = req.cookies.jwt;
+    //const token = req.cookies["token"];
+
+    const token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -20,7 +23,6 @@ const protectRoute = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: "User not found!" });
     }
-
     req.user = user;
 
     next();

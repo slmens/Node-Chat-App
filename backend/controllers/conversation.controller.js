@@ -30,6 +30,16 @@ export const createConversation = async (req, res) => {
           .status(400)
           .json({ message: "You cannot create a conversation with yourself" });
       } else {
+        const conversationExists = await Conversation.findOne({
+          members: { $all: [createrId, receiverId] },
+        });
+
+        if (conversationExists) {
+          return res
+            .status(400)
+            .json({ message: "Conversation already exists" });
+        }
+
         const conversation = await Conversation.create({
           members: [createrId, receiverId],
         });

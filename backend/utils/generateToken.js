@@ -7,9 +7,9 @@ const generateTokenAndSetCookie = (userId, res) => {
 
   const options = {
     expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-    httpOnly: true,
-    sameSite: "strict",
-    secure: process.env.NODE_ENV === "development" ? true : false,
+    httpOnly: process.env.NODE_ENV == "development" ? false : true,
+    sameSite: process.env.NODE_ENV == "development" ? "none" : "Strict",
+    secure: process.env.NODE_ENV == "development" ? false : true,
   };
 
   res.cookie("token", token, options);

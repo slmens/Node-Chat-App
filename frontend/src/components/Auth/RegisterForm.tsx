@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import { Register } from "@/service/Auth";
+import { Register } from "@/service/Auth.service";
 
 interface RegistrationFormValues {
   fullName: string;
