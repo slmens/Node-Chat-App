@@ -5,13 +5,17 @@ import {
   createConversation,
   getConversations,
 } from "@/service/Conversation.service";
-import ChatContainer from "@/app/Reusables/ChatContainer";
+import ChatContainer from "@/components/Reusables/ChatContainer";
 import { useChatContext } from "@/context/ChatContext";
 
 function ChatNavigation() {
   const createrId = localStorage.getItem("userId");
-  const { conversations, setConversations, update, setUpdate } =
-    useChatContext();
+  const {
+    conversations,
+    setConversations,
+    updateConversations,
+    setUpdate: setUpdateConversations,
+  } = useChatContext();
 
   const router = useRouter();
 
@@ -27,7 +31,7 @@ function ChatNavigation() {
       if (createrId && receiverId) {
         const createResult = await createConversation(createrId, receiverId);
         if (createResult) {
-          setUpdate(!update);
+          setUpdateConversations(!updateConversations);
         } else {
           console.log(
             "Failed to create conversation.Input must be a 24 character hex string, 12 byte Uint8Array, or an integer"
@@ -43,12 +47,11 @@ function ChatNavigation() {
     const fetchConversations = async () => {
       if (!createrId) return;
       const conversations = await getConversations(createrId);
-      console.log(conversations);
       setConversations(conversations);
     };
 
     fetchConversations();
-  }, [update]);
+  }, [updateConversations]);
 
   return (
     <div

@@ -1,13 +1,19 @@
 import Conversation from "../models/conversation.model.js";
 
+// get all conversation without messages
 export const getConversations = async (req, res) => {
   try {
     const { id: userId } = req.params;
 
     if (userId) {
-      const conversations = await Conversation.find({
-        members: { $in: [userId] },
-      });
+      // Define projection to exclude the 'messages' field
+      const projection = { messages: 0 };
+
+      // Fetch conversations without populating the 'messages' field
+      const conversations = await Conversation.find(
+        { members: { $in: [userId] } },
+        projection // Apply projection to exclude the 'messages' field
+      );
 
       res.status(200).json(conversations);
     } else {
@@ -18,6 +24,10 @@ export const getConversations = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// get spesific conversation with messages
+
+export const getConversation = async (req, res) => {};
 
 export const createConversation = async (req, res) => {
   try {

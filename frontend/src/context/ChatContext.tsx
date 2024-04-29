@@ -6,18 +6,21 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [conversations, setConversations] = useState([]);
-  const [update, setUpdate] = useState(false);
-  const [currentChatId, setCurrentChatId] = useState("");
+  const [updateConversations, setUpdateConversations] = useState(false);
+  const [currentConversation, setCurrentConversation] = useState({
+    selectedConversationId: null,
+    messages: [],
+  });
 
   return (
     <ChatContext.Provider
       value={{
         conversations,
         setConversations,
-        update,
-        setUpdate,
-        currentChatId,
-        setCurrentChatId,
+        update: updateConversations,
+        setUpdate: setUpdateConversations,
+        currentConversation: currentConversation,
+        setCurrentConversation: setCurrentConversation,
       }}
     >
       {children}

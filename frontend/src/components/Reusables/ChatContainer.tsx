@@ -2,11 +2,14 @@ import React from "react";
 import { useChatContext } from "@/context/ChatContext";
 
 function ChatContainer({ receiverId }: { receiverId: string }) {
-  const { setCurrentChatId } = useChatContext();
+  const { setCurrentConversation } = useChatContext();
 
   const handleCurrentChat = () => {
     if (receiverId) {
-      setCurrentChatId(receiverId);
+      setCurrentConversation((prev: any) => ({
+        ...prev,
+        selectedConversationId: receiverId,
+      }));
     }
   };
 
