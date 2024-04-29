@@ -1,9 +1,18 @@
 import { Logout } from "@/service/Auth.service";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createConversation } from "@/service/Conversation.service";
+import {
+  createConversation,
+  getConversations,
+} from "@/service/Conversation.service";
+import ChatContainer from "@/app/Reusables/ChatContainer";
+import { useChatContext } from "@/context/ChatContext";
 
 function ChatNavigation() {
+  const createrId = localStorage.getItem("userId");
+  const { conversations, setConversations, update, setUpdate } =
+    useChatContext();
+
   const router = useRouter();
 
   const logOut = async () => {
@@ -11,14 +20,35 @@ function ChatNavigation() {
     if (logOutResult) router.push("/");
   };
 
-  const createNewConversation = () => {
-    const createrId = localStorage.getItem("userId");
+  const createNewConversation = async () => {
     const receiverId = prompt("Enter receiver id");
 
-    if (createrId && receiverId) {
-      createConversation(createrId, receiverId);
+    try {
+      if (createrId && receiverId) {
+        const createResult = await createConversation(createrId, receiverId);
+        if (createResult) {
+          setUpdate(!update);
+        } else {
+          console.log(
+            "Failed to create conversation.Input must be a 24 character hex string, 12 byte Uint8Array, or an integer"
+          );
+        }
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
+
+  useEffect(() => {
+    const fetchConversations = async () => {
+      if (!createrId) return;
+      const conversations = await getConversations(createrId);
+      console.log(conversations);
+      setConversations(conversations);
+    };
+
+    fetchConversations();
+  }, [update]);
 
   return (
     <div
@@ -42,9 +72,23 @@ function ChatNavigation() {
             NEW CHAT
           </button>
         </div>
-        <div id="chatNavigationBottom" className="h-[85%] w-full bg-cyan-400">
+        <div
+          id="chatNavigationBottom"
+          className="h-[85%] w-full pt-5 bg-cyan-400 flex flex-col items-center gap-5"
+        >
           {/* chat listesi ve search function*/}
-          <h1>b</h1>
+          {conversations.map(
+            (conversation: { _id: string; members: string[] }) => (
+              <ChatContainer
+                key={conversation._id}
+                receiverId={
+                  conversation.members[0] === createrId
+                    ? conversation.members[1]
+                    : conversation.members[0]
+                }
+              />
+            )
+          )}
         </div>
       </div>
     </div>

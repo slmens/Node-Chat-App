@@ -53,6 +53,9 @@ export const createConversation = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating conversation:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({
+      message:
+        "Input must be a 24 character hex string, 12 byte Uint8Array, or an integer",
+    });
   }
 };

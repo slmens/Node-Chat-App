@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ChatNavigation from "@/components/ChatLayout/ChatNavigation";
 import Chat from "@/components/ChatLayout/Chat";
+import { ChatProvider } from "@/context/ChatContext";
 
 function Home() {
   const router = useRouter();
@@ -26,8 +27,10 @@ function Home() {
         id="homePageContainer"
         className="w-screen h-screen flex justify-center items-center"
       >
-        <ChatNavigation />
-        <Chat />
+        <ChatProvider>
+          <ChatNavigation />
+          <Chat />
+        </ChatProvider>
       </div>
     )
   );

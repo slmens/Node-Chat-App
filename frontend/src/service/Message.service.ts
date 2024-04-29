@@ -1,16 +1,11 @@
 import AxiosInstance from "./AxiosInstance";
 
-export const createConversation = async (
-  createrId: string,
-  receiverId: string
-) => {
+export const createMessage = async (message: string, receiverId: string) => {
   try {
-    const response = await AxiosInstance.post("conversations", {
-      createrId,
-      receiverId,
+    const response = await AxiosInstance.post(`messages/send/${receiverId}`, {
+      message,
     });
     if (response.status === 201) {
-      console.log(response);
       return true;
     } else {
       return false;
@@ -21,9 +16,9 @@ export const createConversation = async (
   }
 };
 
-export const getConversations = async (userId: string) => {
+export const getMessages = async (receiverId: string) => {
   try {
-    const response = await AxiosInstance.get(`conversations/${userId}`);
+    const response = await AxiosInstance.get(`messages/${receiverId}`);
     if (response.status === 200) {
       return response.data;
     } else {
