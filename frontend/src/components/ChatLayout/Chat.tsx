@@ -69,7 +69,7 @@ function Chat() {
 
       <div
         id="chatScrollContainer"
-        className="h-full w-full px-10 overflow-y-auto"
+        className="h-full w-full px-10 overflow-y-auto mb-16"
       >
         {currentConversation.messages.map((message: any) => (
           <div
