@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useSocketContext } from "../context/SocketContext";
 
 export const Login = async ({
   username,
@@ -14,7 +15,6 @@ export const Login = async ({
     });
 
     if (response.status === 200) {
-      console.log(response.data.userId);
       if (response.data.userId) {
         const exValue = localStorage.getItem("userId");
         if (!exValue) {
@@ -81,6 +81,7 @@ export const Logout = async () => {
     if (response.status === 200) {
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
+
       return true;
     } else {
       return false;

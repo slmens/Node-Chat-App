@@ -22,7 +22,7 @@ export const SocketContextProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(() => {
     if (typeof window !== "undefined") {
       // Access localStorage only in the client-side context
-      return localStorage.getItem("userId") || "";
+      return localStorage.getItem("userId") || null;
     }
     return ""; // Provide a default value for SSR or server-side execution
   });

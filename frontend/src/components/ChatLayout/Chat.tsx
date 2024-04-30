@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useChatContext } from "@/context/ChatContext";
 import { createMessage, getMessages } from "@/service/Message.service";
 import { ListenIncomingMessages } from "@/service/SocketService";
 
 function Chat() {
   const userId = localStorage.getItem("userId");
+  const chatScrollContainerRef = useRef(null);
 
   ListenIncomingMessages();
 
@@ -49,9 +50,16 @@ function Chat() {
     };
 
     fetchMessagesResult();
-
-    console.log(currentConversation);
   }, [currentConversation.selectedConversationId]);
+
+  useEffect(() => {
+    // Scroll to the bottom of the chat container when messages change
+    if (chatScrollContainerRef.current) {
+      (chatScrollContainerRef.current as HTMLElement).scrollTop = (
+        chatScrollContainerRef.current as HTMLElement
+      ).scrollHeight;
+    }
+  }, [currentConversation.messages]);
 
   // chat açıldığı anda currentConversationın idsini kullanarak mesajları çekecek
   // ve currentConversationın mesajlarına atacak
@@ -69,6 +77,7 @@ function Chat() {
 
       <div
         id="chatScrollContainer"
+        ref={chatScrollContainerRef}
         className="h-full w-full px-10 overflow-y-auto mb-16"
       >
         {currentConversation.messages.map((message: any) => (
