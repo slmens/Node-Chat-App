@@ -1,9 +1,14 @@
 import AxiosInstance from "./AxiosInstance";
 
-export const createMessage = async (message: string, receiverId: string) => {
+export const createMessage = async (
+  message: string,
+  conversationId: string,
+  receiverId: string
+) => {
   try {
     const response = await AxiosInstance.post(`messages/send/${receiverId}`, {
       message,
+      conversationId,
     });
     if (response.status === 201) {
       return true;

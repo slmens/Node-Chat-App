@@ -8,7 +8,7 @@ export const ListenIncomingMessages = () => {
 
   useEffect(() => {
     socket?.on("newMessage", (message: any) => {
-      if (currentConversation.selectedConversationId === message.senderId) {
+      if (currentConversation.receiverId === message.senderId) {
         setCurrentConversation((prev: any) => ({
           ...prev,
           messages: [...prev.messages, message],
@@ -17,7 +17,7 @@ export const ListenIncomingMessages = () => {
     });
 
     socket?.on("sentMessage", (message: any) => {
-      if (currentConversation.selectedConversationId === message.receiverId) {
+      if (currentConversation.receiverId === message.receiverId) {
         setCurrentConversation((prev: any) => ({
           ...prev,
           messages: [...prev.messages, message],

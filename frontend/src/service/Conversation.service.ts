@@ -34,13 +34,10 @@ export const getConversations = async (userId: string) => {
   }
 };
 
-export const deleteConversation = async (
-  senderId: string,
-  receiverId: string
-) => {
+export const deleteConversation = async (selectedConversationId: string) => {
   try {
     const response = await AxiosInstance.delete(
-      `conversations/${senderId}/${receiverId}`
+      `conversations/${selectedConversationId}`
     );
     if (response.status === 200) {
       return true;

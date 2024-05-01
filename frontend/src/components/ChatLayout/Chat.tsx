@@ -22,11 +22,12 @@ function Chat() {
     if (messageToSend === "") return;
     // Send message to the current chat
 
-    if (!currentConversation.selectedConversationId) return;
+    if (!currentConversation.receiverId) return;
 
     const messageResult = await createMessage(
       messageToSend,
-      currentConversation.selectedConversationId
+      currentConversation.selectedConversationId,
+      currentConversation.receiverId
     );
 
     if (messageResult) {
@@ -36,17 +37,16 @@ function Chat() {
   };
 
   const handleDeleteChat = async () => {
-    if (!userId || !currentConversation.selectedConversationId) return;
+    if (!currentConversation.selectedConversationId) return;
     const deleteResult = await deleteConversation(
-      userId,
-      currentConversation.receiverId
+      currentConversation.selectedConversationId
     );
     if (deleteResult) {
-      await setCurrentConversation((prev: any) => ({
-        ...prev,
+      await setCurrentConversation({
         selectedConversationId: null,
+        receiverId: null,
         messages: [],
-      }));
+      });
       await setUpdateConversations((prev: any) => !prev);
     }
   };
@@ -55,9 +55,7 @@ function Chat() {
     const fetchMessagesResult = async () => {
       if (currentConversation.selectedConversationId == null) return;
 
-      const result = await getMessages(
-        currentConversation.selectedConversationId
-      );
+      const result = await getMessages(currentConversation.receiverId);
 
       if (result) {
         // Set the messages to the current conversation

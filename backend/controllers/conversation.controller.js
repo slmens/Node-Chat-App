@@ -32,25 +32,29 @@ export const getConversation = async (req, res) => {};
 
 export const deleteConversation = async (req, res) => {
   try {
-    const { receiverId, senderId } = req.params;
+    const { conversationId } = req.params;
 
-    if (receiverId && senderId) {
-      // Conversation'ı sil
-      const conversation = await Conversation.findOneAndDelete({
-        members: { $all: [receiverId, senderId] },
+    // Conversation'ı bul ve sil
+    const conversation = await Conversation.findOneAndDelete({
+      _id: conversationId,
+    });
+
+    if (conversation) {
+      // Conversation silindi, şimdi ilişkili mesajları bul ve sil
+      const messageIds = conversation.messages.map((message) => message);
+      console.log("Message IDs to delete:", messageIds);
+
+      // Mesajları sil
+      const deleteResult = await Message.deleteMany({
+        _id: { $in: messageIds },
       });
+      console.log("Delete result:", deleteResult);
 
-      if (conversation) {
-        // Conversation silindi, şimdi ilişkili mesajları bul ve sil
-        const messageIds = conversation.messages.map((message) => message.$oid);
-        await Message.deleteMany({ _id: { $in: messageIds } });
-
-        res
-          .status(200)
-          .json({ message: "Conversation and related messages deleted" });
-      } else {
-        res.status(404).json({ message: "Conversation not found" });
-      }
+      res
+        .status(200)
+        .json({ message: "Conversation and related messages deleted" });
+    } else {
+      res.status(404).json({ message: "Conversation not found" });
     }
   } catch (error) {
     console.error("Error deleting conversation:", error);

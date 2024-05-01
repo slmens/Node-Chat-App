@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.get("/:id", protectRoute, getConversations);
 router.post("/", protectRoute, createConversation);
-router.delete("/:senderId/:receiverId", protectRoute, deleteConversation);
+router.delete("/:conversationId", protectRoute, deleteConversation);
 
 export default router;
