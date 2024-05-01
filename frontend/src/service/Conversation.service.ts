@@ -10,7 +10,7 @@ export const createConversation = async (
       receiverId,
     });
     if (response.status === 201) {
-      return true;
+      return response.data;
     } else {
       return false;
     }

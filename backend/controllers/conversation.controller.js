@@ -85,7 +85,7 @@ export const createConversation = async (req, res) => {
 
         await conversation.save();
 
-        res.status(201).json(conversation);
+        res.status(201).json(conversation._id);
       }
     } else {
       res.status(400).json({ message: "Invalid data" });

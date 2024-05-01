@@ -39,7 +39,7 @@ function Chat() {
     if (!userId || !currentConversation.selectedConversationId) return;
     const deleteResult = await deleteConversation(
       userId,
-      currentConversation.selectedConversationId
+      currentConversation.receiverId
     );
     if (deleteResult) {
       await setCurrentConversation((prev: any) => ({
@@ -86,8 +86,8 @@ function Chat() {
     <div className="h-full bg-cyan-950 w-full flex flex-col justify-center items-center relative">
       <div className="w-fit flex flex-col justify-center items-center gap-2 px-10 bg-black py-2 rounded-b-2xl rounded-lg-2xl">
         <h1>
-          {currentConversation.selectedConversationId && (
-            <>{currentConversation.selectedConversationId}</>
+          {currentConversation.receiverId && (
+            <>{currentConversation.receiverId}</>
           )}
         </h1>
         {currentConversation.selectedConversationId && (

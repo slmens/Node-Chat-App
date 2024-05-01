@@ -7,6 +7,7 @@ import {
 } from "@/service/Conversation.service";
 import ChatContainer from "@/components/Reusables/ChatContainer";
 import { useChatContext } from "@/context/ChatContext";
+import { create } from "domain";
 
 function ChatNavigation() {
   const createrId = localStorage.getItem("userId");
@@ -15,6 +16,7 @@ function ChatNavigation() {
     setConversations,
     updateConversations,
     setUpdateConversations,
+    setCurrentConversation,
   } = useChatContext();
 
   const router = useRouter();
@@ -31,6 +33,11 @@ function ChatNavigation() {
       if (createrId && receiverId) {
         const createResult = await createConversation(createrId, receiverId);
         if (createResult) {
+          await setCurrentConversation({
+            selectedConversationId: createResult,
+            receiverId: receiverId,
+            messages: [],
+          });
           setUpdateConversations((prev: any) => !prev);
         } else {
           console.log(
@@ -91,6 +98,7 @@ function ChatNavigation() {
                     ? conversation.members[1]
                     : conversation.members[0]
                 }
+                conversationId={conversation._id}
               />
             )
           )}

@@ -9,6 +9,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const [updateConversations, setUpdateConversations] = useState(false);
   const [currentConversation, setCurrentConversation] = useState({
     selectedConversationId: null,
+    receiverId: null,
     messages: [],
   });
 
