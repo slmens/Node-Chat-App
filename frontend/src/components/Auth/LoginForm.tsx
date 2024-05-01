@@ -48,20 +48,39 @@ const LoginForm: React.FC = () => {
       onSubmit={handleSubmit}
     >
       {() => (
-        <Form className="flex flex-col justify-center items-center">
-          <div className="flex flex-col justify-center items-center">
-            <label htmlFor="username">Username</label>
-            <Field type="username" name="username" className="text-black" />
+        <Form className="flex flex-col justify-center items-center  gap-8">
+          <div className="flex flex-col justify-center items-center gap-2">
+            <label htmlFor="username" className="text-lg font-bold">
+              Username
+            </label>
+            <Field
+              type="username"
+              name="username"
+              className="text-black rounded-md px-3 py-1 border shadow-lg shadow-black hover:border-black"
+              placeholder="Username"
+            />
             <ErrorMessage name="username" component="div" />
           </div>
 
-          <div className="flex flex-col justify-center items-center">
-            <label htmlFor="password">Password</label>
-            <Field type="password" name="password" className="text-black" />
+          <div className="flex flex-col justify-center items-center gap-2">
+            <label htmlFor="password" className="text-lg font-bold">
+              Password
+            </label>
+            <Field
+              type="password"
+              name="password"
+              className="text-black rounded-md px-3 py-1 border shadow-lg shadow-black hover:border-black"
+              placeholder="Password"
+            />
             <ErrorMessage name="password" component="div" />
           </div>
 
-          <button type="submit">Login</button>
+          <button
+            type="submit"
+            className="px-10 py-2 border rounded-md hover:bg-blue-500 text-lg font-bold"
+          >
+            Login
+          </button>
         </Form>
       )}
     </Formik>

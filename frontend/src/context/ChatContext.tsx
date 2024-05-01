@@ -17,10 +17,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         conversations,
         setConversations,
-        update: updateConversations,
-        setUpdate: setUpdateConversations,
-        currentConversation: currentConversation,
-        setCurrentConversation: setCurrentConversation,
+        updateConversations,
+        setUpdateConversations,
+        currentConversation,
+        setCurrentConversation,
       }}
     >
       {children}

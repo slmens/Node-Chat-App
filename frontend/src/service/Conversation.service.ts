@@ -10,7 +10,6 @@ export const createConversation = async (
       receiverId,
     });
     if (response.status === 201) {
-      console.log(response);
       return true;
     } else {
       return false;
@@ -32,5 +31,24 @@ export const getConversations = async (userId: string) => {
   } catch (error) {
     console.log(error);
     return [];
+  }
+};
+
+export const deleteConversation = async (
+  senderId: string,
+  receiverId: string
+) => {
+  try {
+    const response = await AxiosInstance.delete(
+      `conversations/${senderId}/${receiverId}`
+    );
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 };

@@ -1,12 +1,15 @@
 "use client";
 
 import LoginForm from "@/components/Auth/LoginForm";
+import RegistrationForm from "@/components/Auth/RegisterForm";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import "./globals.css";
 
 function Login() {
   const router = useRouter();
   const [notAuthorized, setNotAuthorized] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -19,27 +22,40 @@ function Login() {
     }
   }, []);
 
-  const handleRedirectToRegister = () => {
-    router.push("/register");
-  };
-
   return (
     notAuthorized && (
-      <div className="w-screen h-screen flex flex-col gap-10 justify-center items-center">
-        <LoginForm />
-        <button className="" onClick={handleRedirectToRegister}>
-          Don&apos;t you have an account?
-        </button>
+      <div
+        id="loginContainer"
+        className="w-screen h-screen flex justify-center items-center "
+      >
+        <div
+          id="loginInnerContainer"
+          className="min-w-96 min-h-fit flex flex-col gap-7 justify-center items-center bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg border border-gray-300 rounded-lg p-8 shadow-lg"
+        >
+          <h1 className="text-3xl font-bold">BenetChat</h1>
+          <div>
+            <button
+              className={`border px-8 py-1 rounded-l-lg text-lg font-bold ${
+                !isRegister && " bg-blue-500 text-white"
+              }`}
+              onClick={() => setIsRegister(false)}
+            >
+              Log In
+            </button>
+            <button
+              className={`border px-8 py-1 rounded-r-lg text-lg font-bold ${
+                isRegister && " bg-blue-500 text-white"
+              } `}
+              onClick={() => setIsRegister(true)}
+            >
+              Sign In
+            </button>
+          </div>
+          {isRegister ? <RegistrationForm /> : <LoginForm />}
+        </div>
       </div>
     )
   );
 }
 
 export default Login;
-
-// middleware lazım
-// https://www.youtube.com/watch?v=y99YgaQjgx4
-// https://www.youtube.com/watch?v=nYsw2mQ7J6Q&list=PLq8u_jCKAEZozLNUmGTQR0EbKJueE-DXz
-// https://www.youtube.com/watch?v=HwCqsOis894 socket kısmı
-// farklılaştır baya backendi
-// Mobil ekransa left rigth diye değil başka bir page mi yaparsın artık bilmiyorum wp gibi olcak işte

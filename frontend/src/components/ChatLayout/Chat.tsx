@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useChatContext } from "@/context/ChatContext";
 import { createMessage, getMessages } from "@/service/Message.service";
+import { deleteConversation } from "@/service/Conversation.service";
 import { ListenIncomingMessages } from "@/service/SocketService";
 
 function Chat() {
@@ -10,7 +11,11 @@ function Chat() {
 
   ListenIncomingMessages();
 
-  const { currentConversation, setCurrentConversation } = useChatContext();
+  const {
+    currentConversation,
+    setCurrentConversation,
+    setUpdateConversations,
+  } = useChatContext();
   const [messageToSend, setMessageToSend] = useState("");
 
   const sendMessage = async () => {
@@ -27,6 +32,22 @@ function Chat() {
     if (messageResult) {
       // Message sent successfully
       setMessageToSend("");
+    }
+  };
+
+  const handleDeleteChat = async () => {
+    if (!userId || !currentConversation.selectedConversationId) return;
+    const deleteResult = await deleteConversation(
+      userId,
+      currentConversation.selectedConversationId
+    );
+    if (deleteResult) {
+      await setCurrentConversation((prev: any) => ({
+        ...prev,
+        selectedConversationId: null,
+        messages: [],
+      }));
+      await setUpdateConversations((prev: any) => !prev);
     }
   };
 
@@ -61,19 +82,18 @@ function Chat() {
     }
   }, [currentConversation.messages]);
 
-  // chat açıldığı anda currentConversationın idsini kullanarak mesajları çekecek
-  // ve currentConversationın mesajlarına atacak
-  // bu sayede chat açıldığı anda mesajlar görünecek
-  // ve mesaj atıldığı zaman bu mesajlar hem dbye hem de birbirimize gidicek
-
-  // mesaj atıldığı zaman bütün chatleri yenilemek yerine sadece o chati yenilemek daha mantıklı olabilir
-  // bu yüzden her mesaj atıldığı zaman bu conversationın mesajlarını çekeyim
-  // sonra global conversationdaki bu conversationı bulup yeni conversationı veya mesajlarını koyayım
-  // bu sayede şuanki conversation güncellenmiş olur ve diğer conversationların mesajları boşu boşuna tekrar çekilmez
-
   return (
-    <div className="h-full bg-cyan-950 w-full flex flex-col relative">
-      <h1>{currentConversation.selectedConversationId || ""}</h1>
+    <div className="h-full bg-cyan-950 w-full flex flex-col justify-center items-center relative">
+      <div className="w-fit flex flex-col justify-center items-center gap-2 px-10 bg-black py-2 rounded-b-2xl rounded-lg-2xl">
+        <h1>
+          {currentConversation.selectedConversationId && (
+            <>{currentConversation.selectedConversationId}</>
+          )}
+        </h1>
+        {currentConversation.selectedConversationId && (
+          <button onClick={handleDeleteChat}>Delete</button>
+        )}
+      </div>
 
       <div
         id="chatScrollContainer"
@@ -90,9 +110,9 @@ function Chat() {
             <div
               className={`${
                 message.senderId === userId
-                  ? "bg-cyan-800 text-white rounded-br-none"
-                  : "bg-cyan-700 text-black rounded-bl-none"
-              } p-2 rounded-lg m-2`}
+                  ? "bg-cyan-700 text-white rounded-br-none"
+                  : "bg-cyan-700 text-white rounded-bl-none"
+              } p-2 rounded-xl m-2`}
             >
               {message.message}
             </div>

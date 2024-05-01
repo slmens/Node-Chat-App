@@ -14,7 +14,7 @@ function ChatNavigation() {
     conversations,
     setConversations,
     updateConversations,
-    setUpdate: setUpdateConversations,
+    setUpdateConversations,
   } = useChatContext();
 
   const router = useRouter();
@@ -31,7 +31,7 @@ function ChatNavigation() {
       if (createrId && receiverId) {
         const createResult = await createConversation(createrId, receiverId);
         if (createResult) {
-          setUpdateConversations(!updateConversations);
+          setUpdateConversations((prev: any) => !prev);
         } else {
           console.log(
             "Failed to create conversation.Input must be a 24 character hex string, 12 byte Uint8Array, or an integer"
@@ -54,32 +54,34 @@ function ChatNavigation() {
   }, [updateConversations]);
 
   return (
-    <div
-      id="chatNavigationContainer"
-      className="bg-cyan-700 w-[35%] h-full pt-10 px-8"
-    >
-      <div id="chatNavigationInnerContainer" className="h-full w-full">
+    <div id="chatNavigationContainer" className="w-[35%] h-full pt-10 bg-black">
+      <div
+        id="chatNavigationInnerContainer"
+        className="flex flex-col gap-12 h-full w-full"
+      >
         <div
           id="chatNavigationTop"
-          className="h-[15%] bg-cyan-300 w-full flex justify-between px-5"
+          className="h-[15%] w-full flex flex-col gap-5 justify-between items-center px-5"
         >
-          {/* kullanıcının ismi chat ekleme butonu */}
-          <button onClick={logOut} className="text-black">
+          <h1 className="text-center">Your ID {createrId}</h1>
+          <button
+            onClick={logOut}
+            className="w-fit px-6 py-2 border rounded-lg"
+          >
             Log Out
           </button>
           <button
             id="addChat"
-            className="text-black"
+            className="w-fit px-6 py-2 border rounded-lg"
             onClick={createNewConversation}
           >
-            NEW CHAT
+            NEW CHAT +
           </button>
         </div>
         <div
           id="chatNavigationBottom"
-          className="h-[85%] w-full pt-5 bg-cyan-400 flex flex-col items-center gap-5"
+          className="h-[85%] w-full pt-5 flex flex-col items-center gap-5 overflow-y-auto"
         >
-          {/* chat listesi ve search function*/}
           {conversations.map(
             (conversation: { _id: string; members: string[] }) => (
               <ChatContainer

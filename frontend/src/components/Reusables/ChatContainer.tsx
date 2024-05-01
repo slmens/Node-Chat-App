@@ -17,7 +17,7 @@ function ChatContainer({ receiverId }: { receiverId: string }) {
     <div
       onClick={handleCurrentChat}
       id="chatContainer"
-      className="w-fit h-fit px-5 py-3 bg-black rounded-2xl text-white text-center text-sm cursor-pointer hover:bg-gray-800 transition-all duration-300 ease-in-out"
+      className="w-fit h-fit flex gap-5 px-5 py-3 bg-gray-700 rounded-2xl text-white text-center text-sm cursor-pointer hover:bg-gray-800 transition-all duration-300 ease-in-out"
     >
       <h1>{receiverId}</h1>
     </div>
