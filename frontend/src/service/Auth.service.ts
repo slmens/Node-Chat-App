@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useSocketContext } from "../context/SocketContext";
+import AxiosInstance from "./AxiosInstance";
 
 export const Login = async ({
   username,
@@ -9,7 +10,7 @@ export const Login = async ({
   password: string;
 }): Promise<boolean> => {
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/login", {
+    const response = await AxiosInstance.post("api/auth/login", {
       username,
       password,
     });
@@ -47,7 +48,7 @@ export const Register = async ({
   passwordConfirm: string;
 }): Promise<boolean> => {
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/signup", {
+    const response = await AxiosInstance.post("api/auth/signup", {
       fullname,
       username,
       password,
