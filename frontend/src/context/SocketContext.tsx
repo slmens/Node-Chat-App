@@ -30,7 +30,7 @@ export const SocketContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     if (!socket && user) {
-      const socket = io("http://localhost:5000", {
+      const socket = io("https://node-chat-app-3cox.onrender.com", {
         query: {
           userId: user,
         },
