@@ -22,7 +22,7 @@ app.use(express.json()); // To parse JSON bodies
 //app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://node-chat-app-flame.vercel.app/", // Replace with your client's origin
+    origin: "https://node-chat-app-flame.vercel.app", // Replace with your client's origin
     methods: ["GET", "POST", "DELETE"],
   })
 );
