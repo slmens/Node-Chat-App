@@ -8,15 +8,25 @@ function ChatContainer({
   receiverId: string;
   conversationId: string;
 }) {
-  const { setCurrentConversation } = useChatContext();
+  const { setCurrentConversation, setShowDropdown, showDropdown } =
+    useChatContext();
 
-  const handleCurrentChat = () => {
+  const handleCurrentChat = async () => {
+    const dropdown = document.getElementById("chatNavigationContainer");
+
     if (receiverId) {
-      setCurrentConversation((prev: any) => ({
+      await setCurrentConversation((prev: any) => ({
         ...prev,
         selectedConversationId: conversationId,
         receiverId: receiverId,
       }));
+
+      if (dropdown) {
+        if (showDropdown) {
+          setShowDropdown(false);
+          dropdown.style.display = "none";
+        }
+      }
     }
   };
 

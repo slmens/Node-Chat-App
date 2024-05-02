@@ -17,6 +17,8 @@ function ChatNavigation() {
     updateConversations,
     setUpdateConversations,
     setCurrentConversation,
+    setShowDropdown,
+    showDropdown,
   } = useChatContext();
 
   const router = useRouter();
@@ -50,6 +52,17 @@ function ChatNavigation() {
     }
   };
 
+  const handleDropdown = async () => {
+    const dropdown = document.getElementById("chatNavigationContainer");
+
+    if (dropdown) {
+      if (showDropdown) {
+        setShowDropdown(false);
+        dropdown.style.display = "none";
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchConversations = async () => {
       if (!createrId) return;
@@ -61,7 +74,20 @@ function ChatNavigation() {
   }, [updateConversations]);
 
   return (
-    <div id="chatNavigationContainer" className="w-[35%] h-full pt-10 bg-black">
+    <div
+      id="chatNavigationContainer"
+      className="max-w-[90%] h-full pt-10 bg-black mx-auto sm:max-w-screen-sm"
+    >
+      {showDropdown && (
+        <div>
+          <button
+            onClick={handleDropdown}
+            className="absolute top-0 right-[-25px] text-xl bg-black text-white p-2 rounded-br-2xl rounded-lg-2xl"
+          >
+            {"<"}
+          </button>
+        </div>
+      )}
       <div
         id="chatNavigationInnerContainer"
         className="flex flex-col gap-12 h-full w-full"

@@ -8,6 +8,7 @@ import { ListenIncomingMessages } from "@/service/SocketService";
 function Chat() {
   const userId = localStorage.getItem("userId");
   const chatScrollContainerRef = useRef(null);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   ListenIncomingMessages();
 
@@ -15,6 +16,8 @@ function Chat() {
     currentConversation,
     setCurrentConversation,
     setUpdateConversations,
+    setShowDropdown,
+    showDropdown,
   } = useChatContext();
   const [messageToSend, setMessageToSend] = useState("");
 
@@ -51,6 +54,24 @@ function Chat() {
     }
   };
 
+  const handleDropdown = async () => {
+    const dropdown = document.getElementById("chatNavigationContainer");
+
+    if (dropdown) {
+      if (showDropdown) {
+        setShowDropdown(false);
+        dropdown.style.display = "none";
+      } else {
+        setShowDropdown(true);
+        dropdown.style.display = "flex";
+        dropdown.style.position = "absolute";
+        dropdown.style.zIndex = "3";
+        dropdown.style.top = "0";
+        dropdown.style.left = "0";
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchMessagesResult = async () => {
       if (currentConversation.selectedConversationId == null) return;
@@ -82,14 +103,26 @@ function Chat() {
 
   return (
     <div className="h-full bg-cyan-950 w-full flex flex-col justify-center items-center relative">
+      <div>
+        <button
+          onClick={handleDropdown}
+          className="absolute top-0 left-0 text-xl bg-black text-white p-2 rounded-br-2xl rounded-lg-2xl"
+        >
+          {">"}
+        </button>
+      </div>
+
       <div className="w-fit flex flex-col justify-center items-center gap-2 px-10 bg-black py-2 rounded-b-2xl rounded-lg-2xl">
-        <h1>
-          {currentConversation.receiverId && (
-            <>{currentConversation.receiverId}</>
-          )}
-        </h1>
+        {currentConversation.receiverId && (
+          <h1 id="currentChatReceiver" className="">
+            {currentConversation.receiverId}
+          </h1>
+        )}
+
         {currentConversation.selectedConversationId && (
-          <button onClick={handleDeleteChat}>Delete</button>
+          <button id="currentChatDeleteBtn" onClick={handleDeleteChat}>
+            Delete
+          </button>
         )}
       </div>
 

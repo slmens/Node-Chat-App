@@ -12,6 +12,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
     receiverId: null,
     messages: [],
   });
+  const [showDropdown, setShowDropdown] = useState(false);
 
   return (
     <ChatContext.Provider
@@ -22,6 +23,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         setUpdateConversations,
         currentConversation,
         setCurrentConversation,
+        showDropdown,
+        setShowDropdown,
       }}
     >
       {children}

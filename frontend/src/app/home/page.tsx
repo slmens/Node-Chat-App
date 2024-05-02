@@ -25,7 +25,7 @@ function Home() {
     authorized && (
       <div
         id="homePageContainer"
-        className="w-screen h-screen flex justify-center items-center"
+        className="w-screen h-screen flex justify-center items-center relative"
       >
         <ChatProvider>
           <ChatNavigation />
