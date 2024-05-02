@@ -32,7 +32,6 @@ const LoginForm: React.FC = () => {
         username: values.username,
         password: values.password,
       });
-      console.log(loginResult);
       if (loginResult) {
         router.push("/home");
       }
