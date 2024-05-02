@@ -15,6 +15,8 @@ const getServerSideProps = async () => {
   };
 };
 
+getServerSideProps();
+
 const token =
   typeof window !== "undefined" ? localStorage.getItem("token") : null;
 

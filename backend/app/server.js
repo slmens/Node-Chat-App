@@ -24,6 +24,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN, // Replace with your client's origin
     credentials: true, // This allows cookies to be sent with requests
+    methods: ["GET", "POST", "DELETE"],
   })
 );
 
