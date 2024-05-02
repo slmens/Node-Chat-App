@@ -10,7 +10,7 @@ export const Login = async ({
   password: string;
 }): Promise<boolean> => {
   try {
-    const response = await AxiosInstance.post("api/auth/login", {
+    const response = await AxiosInstance.post("auth/login", {
       username,
       password,
     });
@@ -48,7 +48,7 @@ export const Register = async ({
   passwordConfirm: string;
 }): Promise<boolean> => {
   try {
-    const response = await AxiosInstance.post("api/auth/signup", {
+    const response = await AxiosInstance.post("auth/signup", {
       fullname,
       username,
       password,
@@ -78,7 +78,7 @@ export const Register = async ({
 
 export const Logout = async () => {
   try {
-    const response = await AxiosInstance.post("api/auth/logout");
+    const response = await AxiosInstance.post("auth/logout");
     if (response.status === 200) {
       localStorage.removeItem("userId");
       localStorage.removeItem("token");
