@@ -22,7 +22,10 @@ app.use(express.json()); // To parse JSON bodies
 //app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000", // Replace with your client's origin
+    origin: [
+      "http://localhost:3000",
+      "https://node-chat-app-flame.vercel.app/",
+    ], // Replace with your client's origin
     credentials: true, // This allows cookies to be sent with requests
   })
 );
