@@ -78,7 +78,7 @@ export const Register = async ({
 
 export const Logout = async () => {
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/logout");
+    const response = await AxiosInstance.post("api/auth/logout");
     if (response.status === 200) {
       localStorage.removeItem("userId");
       localStorage.removeItem("token");

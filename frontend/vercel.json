@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "error": {
+      "handler": "index.error",
+      "events": [
+        {
+          "http": {
+            "method": "*",
+            "path": "*"
+          }
+        }
+      ]
+    }
+  }
+}
