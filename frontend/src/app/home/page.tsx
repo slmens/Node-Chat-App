@@ -19,6 +19,7 @@ function Home() {
     } else {
       setAuthorized(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

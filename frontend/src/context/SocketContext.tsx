@@ -51,6 +51,7 @@ export const SocketContextProvider = ({ children }: any) => {
 
       return () => {};
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
