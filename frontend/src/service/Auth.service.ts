@@ -10,11 +10,12 @@ export const Login = async ({
   password: string;
 }): Promise<boolean> => {
   try {
+    console.log("a");
     const response = await AxiosInstance.post("api/auth/login", {
       username,
       password,
     });
-    console.log("a");
+
     if (response.status === 200) {
       if (response.data.userId) {
         const exValue = localStorage.getItem("userId");
