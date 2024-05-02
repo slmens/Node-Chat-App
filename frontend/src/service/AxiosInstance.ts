@@ -22,7 +22,6 @@ const token =
 
 const AxiosInstance = axios.create({
   baseURL: "https://node-chat-app-3cox.onrender.com",
-  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Authorization: token ? `Bearer ${token}` : undefined,

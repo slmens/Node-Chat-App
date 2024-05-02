@@ -9,7 +9,6 @@ const io = new Server(server, {
   cors: {
     origin: "https://node-chat-app-flame.vercel.app/",
     methods: ["GET", "POST", "DELETE"],
-    credentials: true,
   },
 });
 
