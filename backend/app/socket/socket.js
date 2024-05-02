@@ -7,10 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://node-chat-app-flame.vercel.app/",
-    ],
+    origin: ["http://localhost:3000", process.env.CLIENT_ORIGIN],
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
   },
