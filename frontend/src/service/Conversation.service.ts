@@ -22,7 +22,7 @@ export const createConversation = async (
 
 export const getConversations = async (userId: string) => {
   try {
-    const response = await AxiosInstance.get(`/conversations/${userId}`);
+    const response = await AxiosInstance.get(`conversations/${userId}`);
     if (response.status === 200) {
       return response.data;
     } else {

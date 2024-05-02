@@ -21,7 +21,7 @@ const token =
   typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
 const AxiosInstance = axios.create({
-  baseURL: "https://node-chat-app-3cox.onrender.com",
+  baseURL: "https://node-chat-app-3cox.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
     Authorization: token ? `Bearer ${token}` : undefined,
