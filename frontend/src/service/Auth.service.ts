@@ -10,7 +10,6 @@ export const Login = async ({
   password: string;
 }): Promise<boolean> => {
   try {
-    console.log("a");
     const response = await AxiosInstance.post("api/auth/login", {
       username,
       password,
