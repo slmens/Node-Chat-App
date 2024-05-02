@@ -20,7 +20,7 @@ function Login() {
     } else {
       setNotAuthorized(true);
     }
-  });
+  }, []);
 
   return (
     notAuthorized && (
