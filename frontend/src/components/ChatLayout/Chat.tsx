@@ -4,11 +4,16 @@ import { useChatContext } from "@/context/ChatContext";
 import { createMessage, getMessages } from "@/service/Message.service";
 import { deleteConversation } from "@/service/Conversation.service";
 import { ListenIncomingMessages } from "@/service/SocketService";
+import Message from "../Reusables/Message";
+import { RiDeleteBinFill } from "react-icons/ri";
 
 function Chat() {
   const userId = localStorage.getItem("userId");
   const chatScrollContainerRef = useRef(null);
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenWidth] = useState(window.innerWidth);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [isDeletingConversation, setIsDeletingConversation] = useState(false);
+  const [messageToSend, setMessageToSend] = useState("");
 
   ListenIncomingMessages();
 
@@ -18,39 +23,54 @@ function Chat() {
     setUpdateConversations,
     setShowDropdown,
     showDropdown,
+    currentPage,
   } = useChatContext();
-  const [messageToSend, setMessageToSend] = useState("");
 
   const sendMessage = async () => {
-    if (messageToSend === "") return;
-    // Send message to the current chat
+    if (!isSendingMessage && messageToSend.trim() !== "") {
+      // Check if message is being sent and if the message is not empty
+      setIsSendingMessage(true); // Set the sending message state to true
 
-    if (!currentConversation.receiverId) return;
+      try {
+        const messageResult = await createMessage(
+          messageToSend,
+          currentConversation.selectedConversationId,
+          currentConversation.receiverId
+        );
 
-    const messageResult = await createMessage(
-      messageToSend,
-      currentConversation.selectedConversationId,
-      currentConversation.receiverId
-    );
-
-    if (messageResult) {
-      // Message sent successfully
-      setMessageToSend("");
+        if (messageResult) {
+          setMessageToSend(""); // Clear the message input
+          setUpdateConversations((prev: any) => !prev); // Update conversation to fetch new messages
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+      } finally {
+        setIsSendingMessage(false); // Reset the sending message state
+      }
     }
   };
 
   const handleDeleteChat = async () => {
-    if (!currentConversation.selectedConversationId) return;
-    const deleteResult = await deleteConversation(
-      currentConversation.selectedConversationId
-    );
-    if (deleteResult) {
-      await setCurrentConversation({
-        selectedConversationId: null,
-        receiverId: null,
-        messages: [],
-      });
-      await setUpdateConversations((prev: any) => !prev);
+    if (!currentConversation.selectedConversationId || isDeletingConversation)
+      return;
+    setIsDeletingConversation(true);
+
+    try {
+      const deleteResult = await deleteConversation(
+        currentConversation.selectedConversationId
+      );
+      if (deleteResult) {
+        await setCurrentConversation({
+          selectedConversationId: null,
+          receiverId: null,
+          messages: [],
+        });
+        await setUpdateConversations((prev: any) => !prev);
+      }
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+    } finally {
+      setIsDeletingConversation(false);
     }
   };
 
@@ -76,13 +96,16 @@ function Chat() {
     const fetchMessagesResult = async () => {
       if (currentConversation.selectedConversationId == null) return;
 
-      const result = await getMessages(currentConversation.receiverId);
+      const result = await getMessages(
+        currentConversation.receiverId,
+        currentPage
+      );
 
       if (result) {
         // Set the messages to the current conversation
         setCurrentConversation((prev: any) => ({
           ...prev,
-          messages: result,
+          messages: prev.messages.concat(result),
         }));
       } else {
         console.log("Failed to fetch messages");
@@ -104,25 +127,32 @@ function Chat() {
 
   return (
     <div className="h-full bg-cyan-950 w-full flex flex-col justify-center items-center relative">
-      <div>
-        <button
-          onClick={handleDropdown}
-          className="absolute top-0 left-0 text-xl bg-black text-white p-2 rounded-br-2xl rounded-lg-2xl"
-        >
-          {">"}
-        </button>
-      </div>
+      {screenWidth < 768 && (
+        <div>
+          <button
+            onClick={handleDropdown}
+            className="absolute top-0 left-0 text-xl bg-black text-white p-2 rounded-br-2xl rounded-lg-2xl"
+          >
+            {">"}
+          </button>
+        </div>
+      )}
 
-      <div className="w-fit flex flex-col justify-center items-center gap-2 px-10 bg-black py-2 rounded-b-2xl rounded-lg-2xl">
+      <div className="w-fit flex justify-center items-center gap-4 px-10 bg-black py-2 rounded-b-2xl rounded-lg-2xl">
         {currentConversation.receiverId && (
           <h1 id="currentChatReceiver" className="">
-            {currentConversation.receiverId}
+            {currentConversation.conversationName}
           </h1>
         )}
 
         {currentConversation.selectedConversationId && (
-          <button id="currentChatDeleteBtn" onClick={handleDeleteChat}>
-            Delete
+          <button
+            disabled={isDeletingConversation}
+            id="currentChatDeleteBtn"
+            onClick={handleDeleteChat}
+            className="text-2xl"
+          >
+            <RiDeleteBinFill />
           </button>
         )}
       </div>
@@ -133,22 +163,7 @@ function Chat() {
         className="h-full w-full px-10 overflow-y-auto mb-16"
       >
         {currentConversation.messages.map((message: any) => (
-          <div
-            key={message._id}
-            className={`flex w-full ${
-              message.senderId === userId ? "justify-end" : "justify-start"
-            }`}
-          >
-            <div
-              className={`${
-                message.senderId === userId
-                  ? "bg-cyan-700 text-white rounded-br-none"
-                  : "bg-cyan-700 text-white rounded-bl-none"
-              } p-2 rounded-xl m-2`}
-            >
-              {message.message}
-            </div>
-          </div>
+          <Message key={message._id} message={message} userId={userId} />
         ))}
       </div>
 
@@ -165,6 +180,7 @@ function Chat() {
           onClick={sendMessage}
           id="chatSendButton"
           className="w-32 h-12 bg-cyan-800 text-white"
+          disabled={isSendingMessage}
         >
           Send
         </button>

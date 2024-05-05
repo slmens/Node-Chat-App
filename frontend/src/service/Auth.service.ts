@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useSocketContext } from "../context/SocketContext";
 import AxiosInstance from "./AxiosInstance";
 
 export const Login = async ({

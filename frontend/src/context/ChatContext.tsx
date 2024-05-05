@@ -9,10 +9,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const [updateConversations, setUpdateConversations] = useState(false);
   const [currentConversation, setCurrentConversation] = useState({
     selectedConversationId: null,
+    conversationName: "",
     receiverId: null,
     messages: [],
   });
   const [showDropdown, setShowDropdown] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [updateUnreadMessages, setUpdateUnreadMessages] = useState(false);
 
   return (
     <ChatContext.Provider
@@ -25,6 +28,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         setCurrentConversation,
         showDropdown,
         setShowDropdown,
+        currentPage,
+        setCurrentPage,
+        updateUnreadMessages,
+        setUpdateUnreadMessages,
       }}
     >
       {children}

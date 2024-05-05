@@ -15,6 +15,15 @@ const conversationSchema = new mongoose.Schema(
         default: [],
       },
     ],
+    conversationName: {
+      type: String,
+      default: "",
+      required: true,
+    },
+    unreadMessages: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

@@ -7,10 +7,11 @@ import {
 } from "@/service/Conversation.service";
 import ChatContainer from "@/components/Reusables/ChatContainer";
 import { useChatContext } from "@/context/ChatContext";
-import { create } from "domain";
+import NewConversationForm from "@/components/ChatLayout/NewConversationForm";
 
 function ChatNavigation() {
   const createrId = localStorage.getItem("userId");
+  const [showNewChatForm, setShowNewChatForm] = useState(false);
   const {
     conversations,
     setConversations,
@@ -29,7 +30,7 @@ function ChatNavigation() {
   };
 
   const createNewConversation = async () => {
-    const receiverId = prompt("Enter receiver id");
+    /*const receiverId = prompt("Enter receiver id");
 
     try {
       if (createrId && receiverId) {
@@ -49,7 +50,8 @@ function ChatNavigation() {
       }
     } catch (e) {
       console.log(e);
-    }
+    } */
+    //setShowNewChatForm(true);
   };
 
   const handleDropdown = async () => {
@@ -74,6 +76,10 @@ function ChatNavigation() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateConversations]);
 
+  const closeModal = () => {
+    setShowNewChatForm(false);
+  };
+
   return (
     <div
       id="chatNavigationContainer"
@@ -95,7 +101,7 @@ function ChatNavigation() {
       >
         <div
           id="chatNavigationTop"
-          className="h-[15%] w-full flex flex-col gap-5 justify-between items-center px-5"
+          className="h-[15%] w-full flex flex-col gap-5 justify-between items-center px-5 relative"
         >
           <h1 className="text-center">Your ID {createrId}</h1>
           <button
@@ -107,17 +113,30 @@ function ChatNavigation() {
           <button
             id="addChat"
             className="w-fit px-6 py-2 border rounded-lg"
-            onClick={createNewConversation}
+            onClick={() => setShowNewChatForm(true)}
           >
             NEW CHAT +
           </button>
+          {showNewChatForm && (
+            <NewConversationForm
+              createConversation={createConversation}
+              setShowNewChatForm={setShowNewChatForm}
+              createrId={createrId}
+            />
+          )}
         </div>
+
         <div
           id="chatNavigationBottom"
           className="h-[85%] w-full pt-5 flex flex-col items-center gap-5 overflow-y-auto"
         >
           {conversations.map(
-            (conversation: { _id: string; members: string[] }) => (
+            (conversation: {
+              _id: string;
+              members: string[];
+              conversationName: string;
+              unreadMessages: number;
+            }) => (
               <ChatContainer
                 key={conversation._id}
                 receiverId={
@@ -125,7 +144,9 @@ function ChatNavigation() {
                     ? conversation.members[1]
                     : conversation.members[0]
                 }
+                conversationName={conversation.conversationName}
                 conversationId={conversation._id}
+                unreadMessages={conversation.unreadMessages}
               />
             )
           )}

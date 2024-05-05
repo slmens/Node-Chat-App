@@ -2,12 +2,14 @@ import AxiosInstance from "./AxiosInstance";
 
 export const createConversation = async (
   createrId: string,
-  receiverId: string
+  receiverId: string,
+  conversationName: string
 ) => {
   try {
     const response = await AxiosInstance.post("conversations", {
       createrId,
       receiverId,
+      conversationName,
     });
     if (response.status === 201) {
       return response.data;
@@ -36,8 +38,12 @@ export const getConversations = async (userId: string) => {
 
 export const deleteConversation = async (selectedConversationId: string) => {
   try {
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      return false;
+    }
     const response = await AxiosInstance.delete(
-      `conversations/${selectedConversationId}`
+      `conversations/${selectedConversationId}/${userId}`
     );
     if (response.status === 200) {
       return true;

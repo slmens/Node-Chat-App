@@ -3,6 +3,23 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { io } from "socket.io-client";
 
+let API_URL;
+
+const getServerSideProps = async () => {
+  API_URL =
+    process.env.NODE_ENV === "production"
+      ? process.env.BACKEND_URL
+      : process.env.LOCAL_BACKEND_URL;
+
+  return {
+    props: {
+      data: "data",
+    },
+  };
+};
+
+getServerSideProps();
+
 export const SocketContext = createContext<any>(null);
 
 export const useSocketContext = () => {
@@ -18,6 +35,7 @@ export const useSocketContext = () => {
 };
 
 export const SocketContextProvider = ({ children }: any) => {
+  //const { user } = useAuthContext();
   const [socket, setSocket] = useState<any>(null);
   const [user, setUser] = useState<any>(() => {
     if (typeof window !== "undefined") {

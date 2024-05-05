@@ -1,5 +1,8 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import User from "../models/user.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
+import { ObjectId } from "mongodb";
 
 // get all conversation without messages
 export const getConversations = async (req, res) => {
@@ -32,7 +35,7 @@ export const getConversation = async (req, res) => {};
 
 export const deleteConversation = async (req, res) => {
   try {
-    const { conversationId } = req.params;
+    const { conversationId, userId } = req.params;
 
     // Conversation'ı bul ve sil
     const conversation = await Conversation.findOneAndDelete({
@@ -42,13 +45,23 @@ export const deleteConversation = async (req, res) => {
     if (conversation) {
       // Conversation silindi, şimdi ilişkili mesajları bul ve sil
       const messageIds = conversation.messages.map((message) => message);
-      console.log("Message IDs to delete:", messageIds);
 
       // Mesajları sil
-      const deleteResult = await Message.deleteMany({
+      await Message.deleteMany({
         _id: { $in: messageIds },
       });
-      console.log("Delete result:", deleteResult);
+
+      const objectUserId = ObjectId.createFromHexString(userId);
+
+      const receiverId = conversation.members.find(
+        (member) => member.toString() !== objectUserId.toString() // ObjectId'leri string olarak karşılaştırma
+      );
+
+      const recevierSocketId = getReceiverSocketId(receiverId);
+
+      if (recevierSocketId) {
+        io.to(recevierSocketId).emit("deleteConversation", conversationId);
+      }
 
       res
         .status(200)
@@ -65,7 +78,15 @@ export const deleteConversation = async (req, res) => {
 export const createConversation = async (req, res) => {
   try {
     // oluşturan kişinin idsi ve alıcı kişinin idsi
-    const { createrId, receiverId } = req.body;
+    const { createrId, receiverId, conversationName } = req.body;
+
+    // receiver id gerçek mi diye kontrol et
+
+    const user = await User.findById(receiverId);
+
+    if (!ObjectId.isValid(receiverId) || !user) {
+      return res.status(400).json({ message: "Invalid receiver ID" });
+    }
 
     if (createrId && receiverId) {
       if (createrId === receiverId) {
@@ -85,6 +106,7 @@ export const createConversation = async (req, res) => {
 
         const conversation = await Conversation.create({
           members: [createrId, receiverId],
+          conversationName,
         });
 
         await conversation.save();
