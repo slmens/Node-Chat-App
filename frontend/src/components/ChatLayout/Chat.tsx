@@ -26,7 +26,8 @@ function Chat() {
     currentPage,
   } = useChatContext();
 
-  const sendMessage = async () => {
+  const sendMessage = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
     if (!isSendingMessage && messageToSend.trim() !== "") {
       // Check if message is being sent and if the message is not empty
       setIsSendingMessage(true); // Set the sending message state to true
