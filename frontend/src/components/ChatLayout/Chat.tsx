@@ -179,7 +179,7 @@ function Chat() {
         <button
           onClick={sendMessage}
           id="chatSendButton"
-          className="w-32 h-12 bg-cyan-800 text-white"
+          className="w-32 h-12 bg-cyan-900 text-white"
           disabled={isSendingMessage}
         >
           Send

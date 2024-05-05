@@ -27,7 +27,7 @@ function Login() {
     notAuthorized && (
       <div
         id="loginContainer"
-        className="w-screen h-screen flex justify-center items-center "
+        className="w-screen h-screen flex justify-center items-center bg-black"
       >
         <div
           id="loginInnerContainer"
