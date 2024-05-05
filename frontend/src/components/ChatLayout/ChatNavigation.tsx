@@ -76,10 +76,6 @@ function ChatNavigation() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateConversations]);
 
-  const closeModal = () => {
-    setShowNewChatForm(false);
-  };
-
   return (
     <div
       id="chatNavigationContainer"
@@ -144,9 +140,8 @@ function ChatNavigation() {
                     ? conversation.members[1]
                     : conversation.members[0]
                 }
-                conversationName={conversation.conversationName}
                 conversationId={conversation._id}
-                unreadMessages={conversation.unreadMessages}
+                conversationName={conversation.conversationName}
               />
             )
           )}
