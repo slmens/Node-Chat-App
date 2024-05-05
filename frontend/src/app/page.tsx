@@ -31,7 +31,7 @@ function Login() {
       >
         <div
           id="loginInnerContainer"
-          className="min-w-96 min-h-fit flex flex-col gap-7 justify-center items-center bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg border border-gray-300 rounded-lg p-8 shadow-lg"
+          className="min-w-84 min-h-fit flex flex-col gap-7 justify-center items-center bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg border border-gray-300 rounded-lg p-8 shadow-lg"
         >
           <h1 className="text-3xl font-bold">BenetChat</h1>
           <div>
