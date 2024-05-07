@@ -135,9 +135,7 @@ function Chat() {
 
     fetchMessagesResult();
 
-    return () => {
-      deleteUnreadMessages(currentConversation.selectedConversationId);
-    };
+    return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentConversation.selectedConversationId, currentPage]);
 
@@ -148,6 +146,8 @@ function Chat() {
         chatScrollContainerRef.current as HTMLElement
       ).scrollHeight;
     }
+
+    return () => {};
   }, [scrollBottom]);
 
   return (

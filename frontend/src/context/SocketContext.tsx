@@ -25,15 +25,15 @@ export const SocketContextProvider = ({ children }: any) => {
       // Access localStorage only in the client-side context
       return localStorage.getItem("userId") || null;
     }
-    return ""; // Provide a default value for SSR or server-side execution
+    return null; // Provide a default value for SSR or server-side execution
   });
   const [onlineUsers, setOnlineUsers] = useState<any>([]);
 
   useEffect(() => {
     const api =
       process.env.NEXT_PUBLIC_NODE_ENV === "production"
-        ? process.env.NEXT_PUBLIC_BACKEND_URL
-        : process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL;
+        ? process.env.NEXT_PUBLIC_SOCKET_URL
+        : process.env.NEXT_PUBLIC_LOCAL_SOCKET_URL;
     if (!socket && user && api) {
       const socket = io(api, {
         query: {
