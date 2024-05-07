@@ -33,7 +33,7 @@ export const getConversations = async (userId: string) => {
   } catch (error) {
     console.log(error);
 
-    if ((error as any).response.status === 401) {
+    if ((error as any).response && (error as any).response.status === 401) {
       return "unauthorized";
     }
     return [];

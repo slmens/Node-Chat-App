@@ -1,39 +1,24 @@
-"use client";
 import axios from "axios";
 
-let API_URL;
-
-const getServerSideProps = async () => {
-  API_URL =
-    process.env.NODE_ENV === "production"
-      ? process.env.BACKEND_URL
-      : process.env.LOCAL_BACKEND_URL;
-
-  return {
-    props: {
-      data: "data",
-    },
-  };
-};
-
-getServerSideProps();
-
 const AxiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL:
+    process.env.NEXT_PUBLIC_NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_BACKEND_URL
+      : process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 AxiosInstance.interceptors.request.use(
-  (config) => {
+  (config: any) => {
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
+  (error: any) => {
     return Promise.reject(error);
   }
 );

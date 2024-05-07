@@ -3,23 +3,6 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { io } from "socket.io-client";
 
-let API_URL: string | undefined;
-
-const getServerSideProps = async () => {
-  API_URL =
-    process.env.NODE_ENV === "production"
-      ? process.env.BACKEND_URL
-      : process.env.LOCAL_BACKEND_URL;
-
-  return {
-    props: {
-      data: "data",
-    },
-  };
-};
-
-getServerSideProps();
-
 export const SocketContext = createContext<any>(null);
 
 export const useSocketContext = () => {
@@ -47,8 +30,12 @@ export const SocketContextProvider = ({ children }: any) => {
   const [onlineUsers, setOnlineUsers] = useState<any>([]);
 
   useEffect(() => {
-    if (!socket && user && API_URL) {
-      const socket = io(API_URL, {
+    const api =
+      process.env.NEXT_PUBLIC_NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_BACKEND_URL
+        : process.env.NEXT_PUBLIC_LOCAL_BACKEND_URL;
+    if (!socket && user && api) {
+      const socket = io(api, {
         query: {
           userId: user,
         },
