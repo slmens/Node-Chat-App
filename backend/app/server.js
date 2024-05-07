@@ -22,7 +22,7 @@ app.use(express.json()); // To parse JSON bodies
 //app.use(cookieParser());
 app.use(
   cors({
-    origin: [process.env.CLIENT_ORIGIN, process.env.LOCAL_CLIENT_ORIGIN], // Replace with your client's origin
+    origin: process.env.CLIENT_ORIGIN, // Replace with your client's origin
     methods: ["GET", "POST", "DELETE"],
   })
 );
