@@ -92,7 +92,8 @@ export const getMessages = async (req, res) => {
       path: "messages",
       options: {
         limit: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE, // page, kullanıcının talep ettiği sayfa numarası
+        skip: (page - 1) * PAGE_SIZE, // page, kullanıcının talep ettiği sayfa numarası,
+        sort: { createdAt: -1 },
       },
     });
 

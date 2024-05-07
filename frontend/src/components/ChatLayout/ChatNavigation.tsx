@@ -8,6 +8,8 @@ import {
 import ChatContainer from "@/components/Reusables/ChatContainer";
 import { useChatContext } from "@/context/ChatContext";
 import NewConversationForm from "@/components/ChatLayout/NewConversationForm";
+import toast from "react-hot-toast";
+import LoadingBar from "../Reusables/LoadingBar";
 
 function ChatNavigation() {
   const createrId = localStorage.getItem("userId");
@@ -16,17 +18,23 @@ function ChatNavigation() {
     conversations,
     setConversations,
     updateConversations,
-    setUpdateConversations,
-    setCurrentConversation,
     setShowDropdown,
     showDropdown,
   } = useChatContext();
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
   const logOut = async () => {
+    setLoading(true);
     const logOutResult = await Logout();
-    if (logOutResult) router.push("/");
+    if (logOutResult) {
+      toast.success("Successfully logged out!");
+      router.push("/");
+      setLoading(false);
+    } else {
+      toast.error("Error logging out! Server error.");
+    }
   };
 
   const createNewConversation = async () => {
@@ -66,9 +74,19 @@ function ChatNavigation() {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchConversations = async () => {
       if (!createrId) return;
       const conversations = await getConversations(createrId);
+
+      if (conversations === "unauthorized") {
+        toast.error("Unauthorized access! Please login again.");
+        await Logout();
+        router.push("/");
+        return;
+      }
+
+      setLoading(false);
       setConversations(conversations);
     };
 
@@ -79,8 +97,9 @@ function ChatNavigation() {
   return (
     <div
       id="chatNavigationContainer"
-      className="max-w-[90%] h-full pt-10 bg-black mx-auto sm:max-w-screen-sm"
+      className="relative max-w-[90%] h-full pt-10 bg-black mx-auto sm:max-w-screen-sm"
     >
+      {loading && <LoadingBar />}
       {showDropdown && (
         <div>
           <button

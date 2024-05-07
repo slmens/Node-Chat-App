@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useChatContext } from "@/context/ChatContext";
+import toast from "react-hot-toast";
 
 const NewConversationForm = ({
   createConversation,
@@ -29,15 +30,20 @@ const NewConversationForm = ({
             receiverId: receiverId,
             messages: [],
           });
+          toast.success("Successfully created new conversation!");
           setUpdateConversations((prev: any) => !prev);
           setShowNewChatForm(false); // Kullanıcının formu kapatmasını sağlar
         } else {
+          toast.error(
+            "Failed to create conversation! Input must be a valid receiver ID and it shouldn't be your or existing conversation ID!"
+          );
           console.log(
             "Failed to create conversation. Input must be a valid receiver ID."
           );
         }
       }
     } catch (error) {
+      toast.error("Failed to create conversation!");
       console.error("Error creating conversation:", error);
     }
   };

@@ -14,9 +14,9 @@ function Message({ message, userId }: { message: any; userId: string | null }) {
       <div
         className={`${
           message.senderId === userId
-            ? "bg-cyan-700 text-white rounded-br-none"
-            : "bg-cyan-700 text-white rounded-bl-none"
-        } p-2 rounded-xl m-2`}
+            ? "bg-cyan-700 text-white rounded-br-none text-lg"
+            : "bg-cyan-700 text-white rounded-bl-none text-lg"
+        } p-2 px-4 rounded-xl m-2`}
       >
         {message.message}
       </div>

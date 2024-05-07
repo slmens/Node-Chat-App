@@ -5,6 +5,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Login } from "@/service/Auth.service";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import LoadingBar from "../Reusables/LoadingBar";
 
 interface LoginFormValues {
   username: string;
@@ -21,21 +23,27 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required("Password is required"),
 });
 
-const LoginForm: React.FC = () => {
+const LoginForm: React.FC<{
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ loading, setLoading }) => {
   const router = useRouter();
 
   const handleSubmit = async (values: LoginFormValues) => {
     // Handle form submission here
-
+    setLoading(true);
     try {
       const loginResult = await Login({
         username: values.username,
         password: values.password,
       });
       if (loginResult) {
+        toast.success("Successfully logged in!");
         router.push("/home");
+        setLoading(false);
       }
     } catch (e) {
+      toast.error("Failed to login! Check your credentials!");
       console.log(e);
     }
   };

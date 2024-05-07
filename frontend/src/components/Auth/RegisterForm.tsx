@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { Register } from "@/service/Auth.service";
+import toast from "react-hot-toast";
 
 interface RegistrationFormValues {
   fullName: string;
@@ -27,10 +28,19 @@ const RegistrationSchema = Yup.object().shape({
     .required("Password confirmation is required"),
 });
 
-const RegistrationForm: React.FC = () => {
+interface RegistrationFormProps {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const RegistrationForm: React.FC<RegistrationFormProps> = ({
+  loading,
+  setLoading,
+}) => {
   const router = useRouter();
 
   const handleSubmit = async (values: RegistrationFormValues) => {
+    setLoading(true);
     try {
       const registerResult = await Register({
         fullname: values.fullName,
@@ -40,9 +50,12 @@ const RegistrationForm: React.FC = () => {
       });
 
       if (registerResult) {
+        toast.success("Successfully signed up!");
         router.push("/home");
+        setLoading(false);
       }
     } catch (e) {
+      toast.error("Failed to sign up! Check if your passsword matches!");
       console.log(e);
     }
   };

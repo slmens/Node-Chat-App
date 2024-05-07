@@ -3,7 +3,7 @@
 import { createContext, useEffect, useState, useContext } from "react";
 import { io } from "socket.io-client";
 
-let API_URL;
+let API_URL: string | undefined;
 
 const getServerSideProps = async () => {
   API_URL =
@@ -47,8 +47,8 @@ export const SocketContextProvider = ({ children }: any) => {
   const [onlineUsers, setOnlineUsers] = useState<any>([]);
 
   useEffect(() => {
-    if (!socket && user) {
-      const socket = io("https://node-chat-app-3cox.onrender.com", {
+    if (!socket && user && API_URL) {
+      const socket = io(API_URL, {
         query: {
           userId: user,
         },

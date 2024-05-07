@@ -16,6 +16,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [updateUnreadMessages, setUpdateUnreadMessages] = useState(false);
+  const [scrollBottom, setScrollBottom] = useState(false);
 
   return (
     <ChatContext.Provider
@@ -32,6 +33,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         setCurrentPage,
         updateUnreadMessages,
         setUpdateUnreadMessages,
+        scrollBottom,
+        setScrollBottom,
       }}
     >
       {children}

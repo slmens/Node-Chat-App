@@ -10,6 +10,7 @@ export const ListenIncomingMessages = () => {
     conversations,
     setUpdateConversations,
     setUpdateUnreadMessages,
+    setScrollBottom,
   } = useChatContext();
 
   useEffect(() => {
@@ -17,8 +18,9 @@ export const ListenIncomingMessages = () => {
       if (currentConversation.receiverId === message.senderId) {
         setCurrentConversation((prev: any) => ({
           ...prev,
-          messages: [...prev.messages, message],
+          messages: [message, ...prev.messages],
         }));
+        setScrollBottom((prev: boolean) => !prev);
       } else {
         // create conversation
         const conversation = conversations.find(
@@ -36,7 +38,7 @@ export const ListenIncomingMessages = () => {
       if (currentConversation.receiverId === message.receiverId) {
         setCurrentConversation((prev: any) => ({
           ...prev,
-          messages: [...prev.messages, message],
+          messages: [message, ...prev.messages],
         }));
       }
     });

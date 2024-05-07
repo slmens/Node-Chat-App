@@ -6,6 +6,9 @@ import { deleteConversation } from "@/service/Conversation.service";
 import { ListenIncomingMessages } from "@/service/SocketService";
 import Message from "../Reusables/Message";
 import { RiDeleteBinFill } from "react-icons/ri";
+import toast from "react-hot-toast";
+import LoadingBar from "../Reusables/LoadingBar";
+import { deleteUnreadMessages } from "@/service/Message.service";
 
 function Chat() {
   const userId = localStorage.getItem("userId");
@@ -14,6 +17,7 @@ function Chat() {
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [isDeletingConversation, setIsDeletingConversation] = useState(false);
   const [messageToSend, setMessageToSend] = useState("");
+  const [loading, setLoading] = useState(false);
 
   ListenIncomingMessages();
 
@@ -24,6 +28,9 @@ function Chat() {
     setShowDropdown,
     showDropdown,
     currentPage,
+    setCurrentPage,
+    scrollBottom,
+    setScrollBottom,
   } = useChatContext();
 
   const sendMessage = async (e: React.SyntheticEvent) => {
@@ -40,10 +47,12 @@ function Chat() {
         );
 
         if (messageResult) {
+          setScrollBottom((prev: any) => !prev); // Scroll to the bottom of the chat container
           setMessageToSend(""); // Clear the message input
-          setUpdateConversations((prev: any) => !prev); // Update conversation to fetch new messages
+          //setUpdateConversations((prev: any) => !prev); // Update conversation to fetch new messages
         }
       } catch (error) {
+        toast.error("Error sending message! Server error.");
         console.error("Error sending message:", error);
       } finally {
         setIsSendingMessage(false); // Reset the sending message state
@@ -52,6 +61,7 @@ function Chat() {
   };
 
   const handleDeleteChat = async () => {
+    setLoading(true);
     if (!currentConversation.selectedConversationId || isDeletingConversation)
       return;
     setIsDeletingConversation(true);
@@ -66,11 +76,14 @@ function Chat() {
           receiverId: null,
           messages: [],
         });
+        toast.success("Successfully deleted conversation!");
         await setUpdateConversations((prev: any) => !prev);
       }
     } catch (error) {
+      toast.error("Error deleting conversation! Server error.");
       console.error("Error deleting conversation:", error);
     } finally {
+      setLoading(false);
       setIsDeletingConversation(false);
     }
   };
@@ -94,8 +107,12 @@ function Chat() {
   };
 
   useEffect(() => {
+    setLoading(true);
     const fetchMessagesResult = async () => {
-      if (currentConversation.selectedConversationId == null) return;
+      if (currentConversation.selectedConversationId == null) {
+        setLoading(false);
+        return;
+      }
 
       const result = await getMessages(
         currentConversation.receiverId,
@@ -108,14 +125,21 @@ function Chat() {
           ...prev,
           messages: prev.messages.concat(result),
         }));
+        setLoading(false);
       } else {
-        console.log("Failed to fetch messages");
+        toast.error("Failed to fetch messages! Server error.");
+        console.log("Failed to fetch messages!");
+        setLoading(false);
       }
     };
 
     fetchMessagesResult();
+
+    return () => {
+      deleteUnreadMessages(currentConversation.selectedConversationId);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentConversation.selectedConversationId]);
+  }, [currentConversation.selectedConversationId, currentPage]);
 
   useEffect(() => {
     // Scroll to the bottom of the chat container when messages change
@@ -124,10 +148,11 @@ function Chat() {
         chatScrollContainerRef.current as HTMLElement
       ).scrollHeight;
     }
-  }, [currentConversation.messages]);
+  }, [scrollBottom]);
 
   return (
-    <div className="h-full bg-cyan-950 w-full flex flex-col justify-center items-center relative">
+    <div className=" h-full bg-cyan-950 w-full flex flex-col justify-center items-center relative gap-8">
+      {loading && <LoadingBar />}
       {screenWidth < 768 && (
         <div>
           <button
@@ -161,11 +186,23 @@ function Chat() {
       <div
         id="chatScrollContainer"
         ref={chatScrollContainerRef}
-        className="h-full w-full px-10 overflow-y-auto mb-16"
+        className="h-full w-full px-10 overflow-y-auto mb-16 text-center"
       >
-        {currentConversation.messages.map((message: any) => (
-          <Message key={message._id} message={message} userId={userId} />
-        ))}
+        {currentConversation.selectedConversationId && (
+          <button
+            onClick={() => setCurrentPage((prev: number) => prev + 1)}
+            className="mb-5 px-5 py-2 border-2 border-cyan-900 rounded-lg bg-cyan-900 text-white hover:bg-cyan-800 hover:border-cyan-800"
+          >
+            Load More
+          </button>
+        )}
+
+        {currentConversation.messages
+          .slice()
+          .reverse()
+          .map((message: any) => (
+            <Message key={message._id} message={message} userId={userId} />
+          ))}
       </div>
 
       <div id="chatInputContainer" className="flex absolute bottom-0 w-full">
@@ -180,7 +217,7 @@ function Chat() {
         <button
           onClick={sendMessage}
           id="chatSendButton"
-          className="w-32 h-12 bg-cyan-900 text-white"
+          className="w-32 h-12 bg-cyan-600 text-white"
           disabled={isSendingMessage}
         >
           Send

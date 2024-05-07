@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 
-/*
 let API_URL;
 
 const getServerSideProps = async () => {
@@ -17,10 +16,10 @@ const getServerSideProps = async () => {
   };
 };
 
-getServerSideProps(); */
+getServerSideProps();
 
 const AxiosInstance = axios.create({
-  baseURL: "https://node-chat-app-3cox.onrender.com/api",
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
