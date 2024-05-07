@@ -25,6 +25,4 @@ AxiosInstance.interceptors.request.use(
   }
 );
 
-console.log("AxiosInstance", AxiosInstance);
-
 export default AxiosInstance;
