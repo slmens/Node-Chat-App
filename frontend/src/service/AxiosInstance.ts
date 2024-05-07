@@ -1,3 +1,5 @@
+"use client";
+
 import axios from "axios";
 
 const AxiosInstance = axios.create({
@@ -22,5 +24,7 @@ AxiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+console.log("AxiosInstance", AxiosInstance);
 
 export default AxiosInstance;
